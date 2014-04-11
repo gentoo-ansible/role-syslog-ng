@@ -1,0 +1,61 @@
+#{{ ansible_managed }}
+
+#
+# Common logs
+#
+/var/log/auth.log {
+	sharedscripts
+	postrotate
+		/etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+	endscript
+}
+
+/var/log/grsec.log /var/log/pax.log {
+	sharedscripts
+	missingok
+	postrotate
+		/etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+	endscript
+}
+
+/var/log/iptables.log /var/log/kern.log /var/log/syslog /var/log/user.log /var/log/warn.log {
+	sharedscripts
+	missingok
+	maxage 365
+	postrotate
+		/etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+	endscript
+}
+
+/var/log/cron.log /var/log/dhcpcd.log /var/log/mail.log {
+	sharedscripts
+	missingok
+	maxage 365
+	postrotate
+		/etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+	endscript
+}
+
+/var/log/messages {
+	sharedscripts
+	maxage 365
+	postrotate
+		/etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+	endscript
+}
+
+{% for log in syslog_logs %}
+{% if loop.first %}
+#
+# Host specific logs
+#
+{% endif %}
+/var/log/{{ log.filename |default(log.id + '.log') }} {
+	sharedscripts
+	missingok
+	{% if log.delete_after_days is defined %}maxage {{ log.delete_after_days }}{% endif %}
+	postrotate
+		/etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+	endscript
+}
+{% endfor %}

@@ -1,0 +1,24 @@
+---
+- name: install syslog-ng
+  portage: package=app-admin/syslog-ng
+  tags: packages
+
+- name: install logrotate
+  portage: package=app-admin/logrotate
+  tags: packages
+
+- name: configure syslog-ng.conf
+  template: >
+    src=syslog-ng.conf.j2
+    dest=/etc/syslog-ng/syslog-ng.conf
+  notify: reload syslog-ng
+  tags: configuration
+
+- name: configure logrotate for syslog-ng
+  template: >
+    src=logrotate-syslog.j2
+    dest=/etc/logrotate.d/syslog-ng
+  tags: configuration
+
+- name: enable and start syslog-ng
+  service: name=syslog-ng enabled=true state=started

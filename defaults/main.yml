@@ -1,0 +1,38 @@
+---
+# A list of hashes that defines a trio of file destination, filter, log and
+# also a lograte; a simplified configuration that is sufficient for most cases.
+#
+# - id:       unique identifier (required)
+#   source:   source of logging messages - 'src', or 'kernsrc'; default is 'src'
+#   filepath: log file path relative to /var/log/; default is '${id}.log'
+#   filter:   filter expression; default is 'program(${id})'
+#   final:    whether set a final flag; default is false
+#   delete_after_days: how many days to keep old logs (lograte); default is forever
+#
+# Example:
+#   syslog_logs:
+#     - id: dhcpd
+#     - id: vsftpd_warn
+#       source: src
+#       filepath: ftp/vsftpd.warn.log
+#       filter: program(vsftpd) and level(warn..crit)
+#       final: true
+#       delete_after_days: 365
+# 
+# This will produce:
+#   destination d_dhcpd { file("/var/log/dhcpd.log" template(t_file)); };
+#   destination d_vsftpd_warn { file("/var/log/vsftpd_warn.log" template(t_file)); };
+#   filter f_dhcpd { program(dhcpd); };
+#   filter f_vsftpd_warn { program(vsftpd) and level(warn..crit) };
+#   log { source(src); filter(f_dhcpd); destination(d_dhcpd); };
+#   log { source(src); filter(f_vsftpd_warn); destination(d_vsftpd_warn); flags(final); };
+#
+# ...and configuration for logrotate.
+#
+syslog_logs: []
+
+# The template to be used in all destination drivers expect usertty.
+syslog_default_template: '${YEAR}-${MONTH}-${DAY}T${HOUR}:${MIN}:${SEC} ${LEVEL} ${MSGHDR}${MSG}\n'
+
+# Should be added logs for grsecurity and PAX?
+syslog_hardened: true

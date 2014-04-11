@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: Jakub Jirutka
+  company: CTU in Prague
+  description: Manage syslog-ng configuration
+  license: MIT
+  min_ansible_version: 1.6
+  platforms:
+    - name: Gentoo
+  categories:
+    - system
+  dependencies: []
