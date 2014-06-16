@@ -18,7 +18,7 @@
 #       filter: program(vsftpd) and level(warn..crit)
 #       final: true
 #       delete_after_days: 365
-# 
+#
 # This will produce:
 #   destination d_dhcpd { file("/var/log/dhcpd.log" template(t_file)); };
 #   destination d_vsftpd_warn { file("/var/log/vsftpd_warn.log" template(t_file)); };
@@ -30,6 +30,23 @@
 # ...and configuration for logrotate.
 #
 syslog_logs: []
+
+# Additional log sources to be merged with the default ones.
+#
+# <source_id>:  unique identifier of the source (typically just 'src')
+#   comment:      an optional comment
+#   <driver>:     key is name of the source driver, typically unix_stream or file
+#                 (underscores are replaced with hyphens); value is the driver
+#                 parameter
+# Example:
+#   syslog_sources:
+#     src:
+#       - comment: Logging socket inside Postfix chroot jail
+#         unix_stream: /var/spool/postfix/private/log
+#     mysrc:
+#       - file: /run/foo/log
+#
+syslog_sources: {}
 
 # The template to be used in all destination drivers expect usertty.
 syslog_default_template: '${YEAR}-${MONTH}-${DAY}T${HOUR}:${MIN}:${SEC} ${LEVEL} ${MSGHDR}${MSG}\n'
