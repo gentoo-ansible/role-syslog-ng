@@ -9,4 +9,5 @@ galaxy_info:
     - name: Gentoo
   categories:
     - system
-  dependencies: []
+
+dependencies: []
